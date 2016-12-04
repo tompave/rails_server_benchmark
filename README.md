@@ -49,7 +49,10 @@ RAILS_ENV=production WORKER_COUNT=4 THREADS_COUNT=8 bin/puma -C config/puma.rb -
 
 ## How to run the benchmarks (wip)
 
+The application comes with a ruby script to automate the benchmarks:
+
 ```
-ab -c 30 -n 400 127.0.0.1:3000/file-io
-siege -b -c 30 -r 400 127.0.0.1:3000/file-io
+script/benchmark.rb
 ```
+
+It uses either `ab` or `siege`. At the top of the file you can customize the concurrency leve, the number of requests or the duration of the test.
