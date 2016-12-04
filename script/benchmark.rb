@@ -25,8 +25,11 @@ tool = :ab
 #   stop after 30 seconds:
 #     siege -b -c 30 -t 30s
 #
-ab_cmd =    "ab -c #{concurrency_level} -t #{seconds} "
-siege_cmd = "siege -b -c #{concurrency_level} -t #{seconds}s "
+ab_cmd =    "ab -c #{concurrency_level} -t #{seconds}"
+siege_cmd = "siege -b -c #{concurrency_level} -t #{seconds}s"
+# ab_cmd =    "ab -c #{concurrency_level} -n #{total_request}"
+# siege_cmd = "siege -b -c #{concurrency_level} -r #{total_request}"
+
 
 base_cmd = tool == :ab ? ab_cmd : siege_cmd
 
