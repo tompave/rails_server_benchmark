@@ -1,0 +1,20 @@
+<style>
+  li.even {
+    color: #0f0;
+  }
+  li.odd {
+    color: #f00;
+  }
+</style>
+
+<div class="a-test-template">
+  <ol>
+    <% @data.each do |item| %>
+      <% if item[:index] % 2 == 0 %>
+        <%= render partial: "benchmarks/even", locals: { item: item } %>
+      <% else %>
+        <%= render partial: "benchmarks/odd", locals: { item: item } %>
+      <% end %>
+    <% end %>
+  </ol>
+</div>

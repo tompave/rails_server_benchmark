@@ -7,5 +7,6 @@ Rails.application.routes.draw do
     get "/network-io",        action: :network_io
     get "/file-io",           action: :file_io
     get "/fibonacci/:number", action: :fibonacci
+    get "/template",          action: :template
   end
 end

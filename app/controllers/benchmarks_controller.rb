@@ -34,6 +34,13 @@ class BenchmarksController < ApplicationController
   end
 
 
+  def template
+    @data = 300.times.map do |i|
+      { index: i, message: "item n #{i}" }
+    end
+  end
+
+
   private
 
 
