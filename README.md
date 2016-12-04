@@ -2,7 +2,7 @@
 
 This is a demo Rails application to benchmark Unicorn and Puma on Ruby MRI with different types of work.
 
-The application implements five actions on `BenchmarksController`:
+The application implements six actions on `BenchmarksController`:
 
 * `#noop` (`GET /noop`)  
   Just respond with 200, no body.
@@ -14,6 +14,10 @@ The application implements five actions on `BenchmarksController`:
   Read a `txt` file from the file system, then respond with 200 and the time taken.
 * `#fibonacci` (`GET /fibonacci/:number`)  
   Calculate a fibonacci number, then respond with 200 and the time taken.
+* `#template` (`GET /template`)  
+  Responds with 200 and renders a view template with a ERB loop, conditionals and interpolation.
+
+The application does not interact with a DB and the rendered HTMl does not link to any asset.
 
 These endpoints are benchmarked with different configurations of Unicorn and Puma.
 
@@ -27,3 +31,25 @@ These endpoints are benchmarked with different configurations of Unicorn and Pum
 # Hardware
 
 2013 MacBook Pro, 2.7 GHz Intel Core i7, 16 GB RAM.
+
+# Run the servers
+
+## Unicorn
+
+```
+RAILS_ENV=production WORKER_COUNT=4 bin/unicorn -c config/unicorn.rb -E production
+```
+
+## Puma
+
+```
+RAILS_ENV=production WORKER_COUNT=4 THREADS_COUNT=8 bin/puma -C config/puma.rb -e production
+```
+
+
+## How to run the benchmarks (wip)
+
+```
+ab -c 30 -n 400 127.0.0.1:3000/file-io
+siege -b -c 30 -r 400 127.0.0.1:3000/file-io
+```
