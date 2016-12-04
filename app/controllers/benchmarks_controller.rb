@@ -35,9 +35,19 @@ class BenchmarksController < ApplicationController
 
 
   def template
-    @data = 300.times.map do |i|
+    @data = 400.times.map do |i|
       { index: i, message: "item n #{i}" }
     end
+  end
+
+
+  def mix_and_match
+    hash = JSON.parse(Net::HTTP.get(REPO_URL), symbolize_names: true)
+    list = hash.each_pair.each_with_index.map do |key, value, index|
+      { index: index, message: "#{key} => #{value}"}
+    end
+    @data = list * 10
+    render :template
   end
 
 

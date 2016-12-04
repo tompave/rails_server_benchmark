@@ -8,5 +8,6 @@ Rails.application.routes.draw do
     get "/file-io",           action: :file_io
     get "/fibonacci/:number", action: :fibonacci
     get "/template",          action: :template
+    get "/mix-and-match",     action: :mix_and_match
   end
 end
