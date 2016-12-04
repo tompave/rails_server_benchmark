@@ -55,4 +55,9 @@ The application comes with a ruby script to automate the benchmarks:
 script/benchmark.rb
 ```
 
-It uses either `ab` or `siege`. At the top of the file you can customize the concurrency leve, the number of requests or the duration of the test.
+It runs `ab` and collects the results on a `bench_results.txt` file.  
+At the top of the file you can customize the concurrency leve, the number of requests or the duration of the test.
+
+It contains template commands to use `siege` instead of `ab`m but `siege` makes it a bit harder to isolate the test results from the request logging, thus it's not trully supported. At the moment the script is written to work only with `ab`. The `siege` template commands are valid though, and can be used to run independend tests.
+
+

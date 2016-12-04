@@ -5,14 +5,22 @@
 
 concurrency_level = 30
 seconds = 3
-total_request = 400
+# total_request = 400
 
 tool = :ab
 # tool = :siege
 
+if !defined?(seconds) && !defined?(total_request)
+  exit "You must either define the duration of the test or the number of requests"
+end
+
 # ---------------------------------------------------------
 # Benchmarking tools
-
+#
+# Here there is a template command to run siege instead of ab.
+# This is not truly supported because collecting the output of
+# siege is a bit harder.
+#
 # Apache Bench:
 #   stop after 400 requests:
 #     ab -c 30 -n 400
@@ -25,14 +33,24 @@ tool = :ab
 #   stop after 30 seconds:
 #     siege -b -c 30 -t 30s
 #
-ab_cmd =    "ab -c #{concurrency_level} -t #{seconds}"
-siege_cmd = "siege -b -c #{concurrency_level} -t #{seconds}s"
-# ab_cmd =    "ab -c #{concurrency_level} -n #{total_request}"
-# siege_cmd = "siege -b -c #{concurrency_level} -r #{total_request}"
 
+if tool == :ab
+  base_cmd = "ab -c #{concurrency_level}"
 
-base_cmd = tool == :ab ? ab_cmd : siege_cmd
+  if defined?(seconds) && seconds
+    base_cmd << " -t #{seconds}"
+  elsif defined?(total_request) && total_request
+    base_cmd << " -n #{total_request}"
+  end
+elsif tool == :siege
+  base_cmd = "siege -b -c #{concurrency_level}"
 
+  if defined?(seconds) && seconds
+    base_cmd << " -t #{seconds}s"
+  elsif defined?(total_request) && total_request
+    base_cmd << " -r #{total_request}"
+  end
+end
 
 
 # ---------------------------------------------------------
@@ -42,7 +60,7 @@ endpoints = [
   "/pause/2",
   "/network-io",
   "/file-io",
-  "/fibonacci/32", # 0.34 seconds on average
+  "/fibonacci/32", # 0.34 seconds on average on my machine
   "/template",
   "/mix-and-match"
 ]
@@ -75,7 +93,7 @@ endpoints.each do |path|
   cmd = "#{base_cmd} #{url_for(path)}"
 
   puts cmd
-  log cmd
+  log ">>>  " + cmd
 
   output = `#{cmd}`
   log output
