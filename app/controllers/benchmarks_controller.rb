@@ -43,7 +43,7 @@ class BenchmarksController < ApplicationController
 
   def mix_and_match
     hash = JSON.parse(Net::HTTP.get(REPO_URL), symbolize_names: true)
-    list = hash.each_pair.each_with_index.map do |key, value, index|
+    list = hash.each_pair.each_with_index.map do |(key, value), index|
       { index: index, message: "#{key} => #{value}"}
     end
     @data = list * 10
