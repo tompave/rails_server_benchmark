@@ -35,7 +35,7 @@ end
 #
 
 if tool == :ab
-  base_cmd = "ab -c #{concurrency_level}"
+  base_cmd = "ab -r -c #{concurrency_level}"
 
   if defined?(seconds) && seconds
     base_cmd << " -t #{seconds}"
