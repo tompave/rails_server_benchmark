@@ -30,7 +30,7 @@ These endpoints are benchmarked with different configurations of Unicorn and Pum
 
 # Hardware
 
-2013 MacBook Pro, 2.7 GHz Intel Core i7, 16 GB RAM.
+2013 15'' MacBook Pro, 2.7 GHz Intel Core i7, 16 GB RAM.
 
 # Run the servers
 

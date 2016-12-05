@@ -3,8 +3,8 @@
 # ---------------------------------------------------------
 # Configuration
 
-concurrency_level = 30
-seconds = 3
+concurrency_level = 50
+seconds = 30
 # total_request = 400
 
 tool = :ab
