@@ -16,6 +16,8 @@ The application implements six actions on `BenchmarksController`:
   Calculate a fibonacci number, then respond with 200 and the time taken.
 * `#template` (`GET /template`)  
   Responds with 200 and renders a view template with a ERB loop, conditionals and interpolation.
+* `#mix_and_match` (`GET /mix-and-match`)  
+  Combines `network_io` and `template`, to test a mix of CPU and IO work.
 
 The application does not interact with a DB and the rendered HTMl does not link to any asset.
 
