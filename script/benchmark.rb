@@ -92,6 +92,9 @@ endpoints.each do |path|
 
   cmd = "#{base_cmd} #{url_for(path)}"
 
+  # suppress the request logging for Siege
+  cmd << " 1> /dev/null" if tool == :siege
+
   puts cmd
   log ">>>  " + cmd
 
