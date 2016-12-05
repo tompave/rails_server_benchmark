@@ -28,10 +28,6 @@ These endpoints are benchmarked with different configurations of Unicorn and Pum
 * Unicorn 5.2.0
 * Puma 3.6.2
 
-# Hardware
-
-2013 15'' MacBook Pro, 2.7 GHz Intel Core i7, 16 GB RAM.
-
 # Run the servers
 
 ## Unicorn
@@ -43,7 +39,7 @@ RAILS_ENV=production WORKER_COUNT=4 bin/unicorn -c config/unicorn.rb -E producti
 ## Puma
 
 ```
-RAILS_ENV=production WORKER_COUNT=4 THREADS_COUNT=8 bin/puma -C config/puma.rb -e production
+RAILS_ENV=production WORKER_COUNT=4 THREADS_COUNT=5 bin/puma -C config/puma.rb -e production
 ```
 
 
@@ -58,6 +54,6 @@ script/benchmark.rb
 It runs `ab` and collects the results on a `bench_results.txt` file.  
 At the top of the file you can customize the concurrency leve, the number of requests or the duration of the test.
 
-It contains template commands to use `siege` instead of `ab`m but `siege` makes it a bit harder to isolate the test results from the request logging, thus it's not trully supported. At the moment the script is written to work only with `ab`. The `siege` template commands are valid though, and can be used to run independend tests.
+It contains template commands to use `siege` instead of `ab`, but `siege` makes it a bit harder to isolate the test results from the request logging, thus it's not trully supported. At the moment the script is written to work only with `ab`. The `siege` template commands are valid though, and can be used to run independend tests.
 
 
