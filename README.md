@@ -9,7 +9,7 @@ The application implements six actions on `BenchmarksController`:
 * `#pause` (`GET /pause/:seconds`)  
   `Kernel#sleep` for a few seconds, then respond with 200 and the number of seconds in the body.
 * `#network_io` (`GET /network-io`)  
-  Execute an HTTP GET to the GitHub API to obtain JSON data for this repository, then respond with 200 and the time taken.
+  Execute an HTTP GET, then respond with 200 and the time taken.
 * `#file_io` (`GET /file-io`)  
   Read a `txt` file from the file system, then respond with 200 and the time taken.
 * `#fibonacci` (`GET /fibonacci/:number`)  

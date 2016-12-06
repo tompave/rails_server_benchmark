@@ -1,5 +1,5 @@
 class BenchmarksController < ApplicationController
-  REPO_URL  = URI("https://api.github.com/repos/tompave/rails_server_benchmark")
+  REMOTE_URL = URI("https://www.facebook.com/")
   FILE_PATH = Rails.root.join("lib/data/mark_twain.txt")
 
 
@@ -16,7 +16,7 @@ class BenchmarksController < ApplicationController
 
 
   def network_io
-    time = Benchmark.realtime { Net::HTTP.get(REPO_URL) }
+    time = Benchmark.realtime { Net::HTTP.get(REMOTE_URL) }
     render text: time.to_s
   end
 
@@ -42,11 +42,10 @@ class BenchmarksController < ApplicationController
 
 
   def mix_and_match
-    hash = JSON.parse(Net::HTTP.get(REPO_URL), symbolize_names: true)
-    list = hash.each_pair.each_with_index.map do |(key, value), index|
-      { index: index, message: "#{key} => #{value}"}
+    html = Net::HTTP.get(REMOTE_URL)
+    @data = html.split.each_with_index.map do |str, index|
+      { index: index, message: str }
     end
-    @data = list * 10
     render :template
   end
 

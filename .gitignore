@@ -20,5 +20,4 @@
 # Ignore Byebug command history file.
 .byebug_history
 
-
-bench_results.txt
+bench_results*
