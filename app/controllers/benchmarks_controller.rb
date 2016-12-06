@@ -11,26 +11,26 @@ class BenchmarksController < ApplicationController
   def pause
     seconds = params[:seconds].to_i
     sleep(seconds)
-    render text: seconds
+    render plain: seconds
   end
 
 
   def network_io
     time = Benchmark.realtime { Net::HTTP.get(REMOTE_URL) }
-    render text: time.to_s
+    render plain: time.to_s
   end
 
 
   def file_io
     time = Benchmark.realtime { File.read(FILE_PATH) }
-    render text: time.to_s
+    render plain: time.to_s
   end
 
 
   def fibonacci
     number = params[:number].to_i
     time = Benchmark.realtime { fib(number) }
-    render text: time.to_s
+    render plain: time.to_s
   end
 
 
