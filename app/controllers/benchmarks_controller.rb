@@ -43,9 +43,10 @@ class BenchmarksController < ApplicationController
 
   def mix_and_match
     html = Net::HTTP.get(REMOTE_URL)
-    @data = html.split.each_with_index.map do |str, index|
+    list = html.split("\n").each_with_index.map do |str, index|
       { index: index, message: str }
     end
+    @data = list * 7
     render :template
   end
 
