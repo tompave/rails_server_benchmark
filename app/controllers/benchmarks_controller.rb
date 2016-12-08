@@ -3,8 +3,43 @@ class BenchmarksController < ApplicationController
   FILE_PATH = Rails.root.join("lib/data/mark_twain.txt")
 
 
-  def noop
-    head 200
+  def fibonacci
+    number = params[:number].to_i
+    time = Benchmark.realtime { fib(number) }
+    render plain: time.to_s
+  end
+
+
+  def template_render
+    @data = 400.times.map do |i|
+      { index: i, message: "item n #{i}" }
+    end
+    render :long_list
+  end
+
+
+  def template_render_no_response
+    @data = 400.times.map do |i|
+      { index: i, message: "item n #{i}" }
+    end
+    time = Benchmark.realtime { render_to_string(:long_list) }
+    render plain: time.to_s
+  end
+
+
+  def network_io
+    time = Benchmark.realtime { Net::HTTP.get(REMOTE_URL) }
+    render plain: time.to_s
+  end
+
+
+  def network_io_and_render
+    html = Net::HTTP.get(REMOTE_URL)
+    list = html.split("\n").each_with_index.map do |str, index|
+      { index: index, message: str }
+    end
+    @data = list * 7
+    render :long_list
   end
 
 
@@ -15,39 +50,15 @@ class BenchmarksController < ApplicationController
   end
 
 
-  def network_io
-    time = Benchmark.realtime { Net::HTTP.get(REMOTE_URL) }
-    render plain: time.to_s
-  end
-
-
-  def file_io
-    time = Benchmark.realtime { File.read(FILE_PATH) }
-    render plain: time.to_s
-  end
-
-
-  def fibonacci
-    number = params[:number].to_i
-    time = Benchmark.realtime { fib(number) }
-    render plain: time.to_s
-  end
-
-
-  def template
+  def pause_and_render
     @data = 400.times.map do |i|
       { index: i, message: "item n #{i}" }
     end
-  end
 
+    seconds = params[:seconds].to_i
+    sleep(seconds)
 
-  def mix_and_match
-    html = Net::HTTP.get(REMOTE_URL)
-    list = html.split("\n").each_with_index.map do |str, index|
-      { index: index, message: str }
-    end
-    @data = list * 7
-    render :template
+    render :long_list
   end
 
 

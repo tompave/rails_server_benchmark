@@ -4,20 +4,21 @@ This is a demo Rails application to benchmark Unicorn and Puma on Ruby MRI with 
 
 The application implements six actions on `BenchmarksController`:
 
-* `#noop` (`GET /noop`)  
-  Just respond with 200, no body.
-* `#pause` (`GET /pause/:seconds`)  
+
+* `/fibonacci/:number`
+  Calculate a fibonacci number, then respond with just the number, as plain text.
+* `/template-render`
+  Renders a view template with a ERB loop, conditionals and interpolation, responds with the template.
+* `/template-render-no-response`
+  Like the one above, but it discards the rendered body and responds with the time taken, as plain text.
+* `/network-io`
+  Execute an HTTP GET, then respond with the time taken.
+* `/network-io-and-render`
+  Combines `network-io` and `template-render`, to test a mix of CPU and IO work.
+* `/pause/:seconds`
   `Kernel#sleep` for a few seconds, then respond with 200 and the number of seconds in the body.
-* `#network_io` (`GET /network-io`)  
-  Execute an HTTP GET, then respond with 200 and the time taken.
-* `#file_io` (`GET /file-io`)  
-  Read a `txt` file from the file system, then respond with 200 and the time taken.
-* `#fibonacci` (`GET /fibonacci/:number`)  
-  Calculate a fibonacci number, then respond with 200 and the time taken.
-* `#template` (`GET /template`)  
-  Responds with 200 and renders a view template with a ERB loop, conditionals and interpolation.
-* `#mix_and_match` (`GET /mix-and-match`)  
-  Combines `network_io` and `template`, to test a mix of CPU and IO work.
+* `/pause-and-render/:seconds`
+  Combines `/pause/:seconds` and `template-render`, to test a mix of CPU and (simulated) IO work.
 
 The application does not interact with a DB and the rendered HTMl does not link to any asset.
 

@@ -56,14 +56,16 @@ end
 # ---------------------------------------------------------
 
 endpoints = [
-  "/noop",
-  "/pause/2",
+  "/fibonacci/:number", # 0.34 seconds on average on my machine
+  "/template-render",
+  "/template-render-no-response",
   "/network-io",
-  "/file-io",
-  "/fibonacci/32", # 0.34 seconds on average on my machine
-  "/template",
-  "/mix-and-match"
+  "/network-io-and-render",
+  "/pause/:seconds",
+  "/pause-and-render/:seconds"
 ]
+
+
 
 @base_url = "http://127.0.0.1:3000"
 
