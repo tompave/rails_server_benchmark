@@ -33,6 +33,8 @@ These endpoints are benchmarked with different configurations of Unicorn and Pum
 
 # Run the servers
 
+Example commands to run start the app with the two servers:
+
 ## Unicorn
 
 ```
@@ -54,9 +56,6 @@ The application comes with a ruby script to automate the benchmarks:
 script/benchmark.rb
 ```
 
-It runs `ab` and collects the results on a `bench_results.txt` file.  
-At the top of the file you can customize the concurrency leve, the number of requests or the duration of the test.
+It runs `ab` and collects the results on a `bench_results.txt` file. The results are written as CSV blocks, which can be copied and pasted in a spreadsheet for further processing.
 
-It contains template commands to use `siege` instead of `ab`, but `siege` makes it a bit harder to isolate the test results from the request logging, thus it's not trully supported. At the moment the script is written to work only with `ab`. The `siege` template commands are valid though, and can be used to run independend tests.
-
-
+It defaults to running `ab` for 30 seconds, with increasing concurrency levels: 1, 10, 20, 30, 40, 50. It tries its best to sleep between CPU intesive tests to let the processor cool down a little.
