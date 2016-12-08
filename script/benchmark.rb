@@ -4,20 +4,16 @@
 # Configuration
 
 seconds = 30
-# total_request = 400
+# total_requests = 400
 CONCURRENCY_LEVELS = [1, 10, 20, 30, 40, 50]
 
 
-if !defined?(seconds) && !defined?(total_request)
+if !defined?(seconds) && !defined?(total_requests)
   exit "You must either define the duration of the test or the number of requests"
 end
 
 # ---------------------------------------------------------
 # Benchmarking tools
-#
-# Here there is a template command to run siege instead of ab.
-# This is not truly supported because collecting the output of
-# siege is a bit harder.
 #
 # Apache Bench:
 #   stop after 400 requests:
@@ -30,8 +26,8 @@ end
 
 if defined?(seconds) && seconds
   @base_cmd << " -t #{seconds}"
-elsif defined?(total_request) && total_request
-  @base_cmd << " -n #{total_request}"
+elsif defined?(total_requests) && total_requests
+  @base_cmd << " -n #{total_requests}"
 end
 
 @base_cmd << " %{url} 2> /dev/null"
@@ -56,8 +52,9 @@ ENDPOINTS = [
 ]
 
 
-
 BASE_URL = "http://127.0.0.1:3000"
+
+require 'uri'
 
 def url_for(path)
   URI.join(BASE_URL, path).to_s
@@ -65,30 +62,25 @@ end
 
 # ---------------------------------------------------------
 
-require 'uri'
 require 'csv'
 
 output_file_path = File.expand_path("../../bench_results.txt", __FILE__)
 @out_file = File.open(output_file_path, "w")
 
-def log(str)
-  @out_file.puts str
-  @out_file.puts "\n"
-end
+# def log(str)
+#   @out_file.puts str
+#   @out_file.puts "\n"
+# end
 
 def write_row(target, type, results)
   str = CSV.generate_line([target, type, *results])
   @out_file.puts str
 end
-# ---------------------------------------------------------
 
-
-
-
-# ---------------------------------------------------------
 
 REQ_P_S_REGEX = %r{Requests per second\:\s+(\d+\.\d*) \[\#\/sec\] \(mean\)}
 T_P_REQ_REGEX = %r{Time per request\:\s+(\d+\.\d*) \[ms\] \(mean\)}
+
 def extract_data(str)
   return nil if blank?(str)
   req_p_s = REQ_P_S_REGEX.match(str)&.[](1).to_s
@@ -96,13 +88,6 @@ def extract_data(str)
   [req_p_s, t_p_req]
 end
 
-# ---------------------------------------------------------
-
-
-@results = {
-  req_p_sec: {},
-  resp_time: {}
-}
 
 def run_test(conc_requests, target)
   cmd = sprintf(@base_cmd, concurrency_level: conc_requests, url: target)
