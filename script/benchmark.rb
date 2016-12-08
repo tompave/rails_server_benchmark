@@ -3,7 +3,7 @@
 # ---------------------------------------------------------
 # Configuration
 
-seconds = 5
+seconds = 30
 # total_request = 400
 CONCURRENCY_LEVELS = [1, 10, 20, 30, 40, 50]
 
@@ -34,7 +34,7 @@ elsif defined?(total_request) && total_request
   @base_cmd << " -n #{total_request}"
 end
 
-@base_cmd << " %{url}"
+@base_cmd << " %{url} 2> /dev/null"
 
 # ---------------------------------------------------------
 def blank?(str)
@@ -42,13 +42,16 @@ def blank?(str)
 end
 # ---------------------------------------------------------
 
+# Alternate CPU intensive and IO intesive jobs, otherwise
+# my CPU will catch fire
+#
 ENDPOINTS = [
   "/fibonacci/32", # 0.34 seconds on average on my machine
-  "/template-render",
-  "/template-render-no-response",
-  "/network-io",
-  "/network-io-and-render",
   "/pause/2",
+  "/template-render",
+  "/network-io",
+  "/template-render-no-response",
+  "/network-io-and-render",
   "/pause-and-render/2"
 ]
 
@@ -103,10 +106,16 @@ end
 
 def run_test(conc_requests, target)
   cmd = sprintf(@base_cmd, concurrency_level: conc_requests, url: target)
-  print ">>> #{cmd}"
+  print cmd
   output = `#{cmd}`
 end
 
+def maybe_cooldown(path, seconds)
+  if path =~ /fibonacci|render/
+    puts "cooling down for #{seconds}s..."
+    sleep seconds
+  end
+end
 
 write_row("path", "metric", CONCURRENCY_LEVELS)
 
@@ -119,14 +128,16 @@ ENDPOINTS.each do |path|
     results = run_test(conc_req, target)
     req_p_s, resp_time = extract_data(results)
 
-    puts "  req/s: #{req_p_s}, resp time: #{resp_time}"
+    puts " | req/s: #{req_p_s}, resp ms: #{resp_time}"
 
     req_p_s_results << req_p_s
     resp_time_results << resp_time
+    maybe_cooldown(path, 5)
   end
 
   write_row(path, "req/s", req_p_s_results)
   write_row(path, "resp_time", resp_time_results)
+  maybe_cooldown(path, 20)
 end
 
 
