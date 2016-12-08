@@ -64,7 +64,7 @@ end
 
 require 'csv'
 
-output_file_path = File.expand_path("../../bench_results.txt", __FILE__)
+output_file_path = File.expand_path("../../results/bench_results.csv", __FILE__)
 @out_file = File.open(output_file_path, "w")
 
 # def log(str)

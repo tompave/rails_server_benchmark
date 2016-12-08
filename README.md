@@ -50,12 +50,14 @@ RAILS_ENV=production WORKER_COUNT=4 THREADS_COUNT=5 bin/puma -C config/puma.rb -
 
 ## How to run the benchmarks (wip)
 
-The application comes with a ruby script to automate the benchmarks:
+The application comes with a ruby script to automate the benchmarks: `script/benchmark.rb`.
 
-```
-script/benchmark.rb
-```
-
-It runs `ab` and collects the results on a `bench_results.txt` file. The results are written as CSV blocks, which can be copied and pasted in a spreadsheet for further processing.
-
+It runs `ab` and collects the results in a `results/bench_results.csv` file.  
 It defaults to running `ab` for 30 seconds, with increasing concurrency levels: 1, 10, 20, 30, 40, 50. It tries its best to sleep between CPU intesive tests to let the processor cool down a little.
+
+Each run takes roughly 25 minutes (`(30 * 6 * 7 + (5 * 6 + 20) * 5) / 60`).
+
+After each run, rename the file by adding the server configuration, e.g. `bench_results_unicorn_4.csv` for Unicorn running with 4 workes, and `bench_results_puma_4_5.csv` for Puma running with 4 workers and 5 threads per worker.
+
+This is necessary to run the next script: `script/organize.rb`.  
+This will parse the CSVs and create a new `processed.csv` file with the data grouped in a way that makes it easier to compare how the different setups performed on the same tests.
