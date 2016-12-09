@@ -59,7 +59,8 @@ out = File.open(PROCESSED, "w")
   out.puts ""
 
   metrics.each_pair do |metric, servers|
-    out.puts CSV.generate_line([metric, *concurrency_levels])
+    out.puts metric
+    out.puts CSV.generate_line(["concurrent requests", *concurrency_levels])
 
     servers.each_pair do |server, data|
       out.puts CSV.generate_line([server, *data])
