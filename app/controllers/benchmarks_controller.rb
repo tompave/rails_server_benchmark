@@ -1,7 +1,5 @@
 class BenchmarksController < ApplicationController
   REMOTE_URL = URI("https://www.facebook.com/")
-  FILE_PATH = Rails.root.join("lib/data/mark_twain.txt")
-
 
   def fibonacci
     number = params[:number].to_i
