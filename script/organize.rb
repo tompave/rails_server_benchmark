@@ -18,6 +18,9 @@ def get_server_label(file_name)
 end
 
 
+# ---------------------------------------------------------
+# Setup the data
+
 # [endpoints]
 #   [metrics]
 #     [servers]
@@ -52,7 +55,48 @@ raw_results_files.each do |file_path|
 end
 
 
+# ---------------------------------------------------------
+# Setup more data
+
+endpoints = @data.keys
+metrics = @data.values.first.keys
+servers = @data.values.first.values.first.keys
+
+@rotated = Hash.new do |root, concurrency_level|
+  root[concurrency_level] = Hash.new do |cl, metric|
+    cl[metric] = Hash.new do |mt, endpoint|
+      mt[endpoint] = []
+    end
+  end
+end
+
+def rotated_store(concurrency:, metric:, endpoint:, data:)
+  @rotated[concurrency][metric][endpoint] = data
+end
+
+
+concurrency_levels.each_with_index do |cl, cl_index|
+  metrics.each do |metric|
+    endpoints.each do |endpoint|
+      data = servers.map do |server|
+        @data[endpoint][metric][server][cl_index]
+      end
+      rotated_store(
+        concurrency: cl,
+        metric: metric,
+        endpoint: endpoint,
+        data: data
+      )
+    end
+  end
+end
+
+# ---------------------------------------------------------
+# Write the new CSV
+
 out = File.open(PROCESSED, "w")
+
+# Y:metric, X:concurrency, data:server
 
 @data.each_pair do |endpoint, metrics|
   out.puts endpoint
@@ -68,5 +112,25 @@ out = File.open(PROCESSED, "w")
     out.puts "\n\n"
   end
 end
+
+out.puts "----------------------------------"
+
+# Y:metric, X:server, data:endpoint
+
+@rotated.each_pair do |concurrency_level, metrics|
+  out.puts concurrency_level
+  out.puts ""
+
+  metrics.each_pair do |metric, endpoints|
+    out.puts metric
+    out.puts CSV.generate_line(["server", *servers])
+
+    endpoints.each_pair do |endpoint, data|
+      out.puts CSV.generate_line([endpoint, *data])
+    end
+    out.puts "\n\n"
+  end
+end
+
 
 out.close
